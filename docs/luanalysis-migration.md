@@ -27,6 +27,9 @@ Compatibility must be verified per target; a declared build range is not a test 
 | `@not` union exclusion and variadic casts | `TyUnion`, `TyMultipleResults`, expression inference | `type_casts.lua`, `varreturn.lua` |
 | `@type` on return statements | return PSI and return inspection | return type tests, `function_closures.lua` |
 | Primitive literal types (number, boolean, string) | doc lexer/parser, `TyPrimitiveLiteral` | `boolean.lua`, `numbers.lua`, `string_literals.lua`, primitive completion tests |
+| EmmyLua numeric annotation subtypes (`int`/`integer`, `float`) | primitive resolution, numeric literal representation and serialization | `emmy_numeric_types.lua`, `PrimitiveTypesTest` |
+| Distinct `lightuserdata` annotations | primitive resolution and standard library type declarations | `lightuserdata.lua`, `PrimitiveTypesTest` |
+| Primitive inheritance, including `table<string, int>` | inheritance inspection and substituted primitive member lookup | `primitive_inheritance.lua`, `illegal_inheritance.lua` |
 | Generic classes, constraints and dependent parameters | generic PSI, `GenericAnalyzer`, `TyGeneric` | `generic_class_*.lua`, `generics.lua` |
 | Generic scope within classes and functions | scope tree and generic resolution | `generic_class_scope.lua`, `function_generics_scope.lua` |
 | Generic aliases and recursive aliases | alias stubs, `TyAlias`, substitutions | `generic_alias.lua`, `recursive_alias.lua`, illegal alias tests |
@@ -43,6 +46,24 @@ Compatibility must be verified per target; a declared build range is not a test 
 
 Some fixture names above describe coverage categories; exact paths and executed
 test counts are recorded in the validation report after running the suite.
+
+## EmmyLua compatibility (issue #1)
+
+- `int` is an alias for `integer`. `integer` and `float` are distinct subtypes
+  of `number`; a plain `number` does not establish either narrower type.
+- Numeric expression literals retain their integer/float spelling for subtype
+  checks, including through unary minus and stub serialization. Numeric literal
+  annotations retain Luanalysis value equality (`1` accepts `1.0`). Merging equal
+  literal values with different representations discards the narrower representation.
+- Arithmetic and unannotated generic inference retain the migrated conservative
+  `number` widening. These annotations do not change pre-5.3 Lua runtime semantics.
+- `lightuserdata` remains distinct from the existing `userdata` class.
+- Classes may inherit primitive types and generic tables. Inherited dictionary
+  values participate in member/indexer inference and assignment checks, while
+  declared fields retain precedence. Self/cyclic inheritance, literal bases and
+  array bases remain diagnosed.
+- Stub version 3 forces an index rebuild because numeric literals now serialize
+  their representation and the new built-in names must be resolved again.
 
 ## Integration decisions
 

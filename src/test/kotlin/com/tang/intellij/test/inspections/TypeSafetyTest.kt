@@ -201,6 +201,18 @@ class TypeSafetyTest : LuaInspectionsTestBase(
         check("numbers.lua")
     }
 
+    fun testEmmyNumericTypes() {
+        check("emmy_numeric_types.lua")
+    }
+
+    fun testLightUserdata() {
+        check("lightuserdata.lua")
+    }
+
+    fun testPrimitiveInheritance() {
+        check("primitive_inheritance.lua")
+    }
+
     fun testOps() {
         check("ops.lua")
     }

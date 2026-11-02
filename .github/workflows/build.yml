@@ -36,7 +36,7 @@ jobs:
 
     env:
       CI: true
-      CI_BUILD_VERSION: ${{ inputs.version || format('1.5.5-dev.{0}', github.run_number) }}
+      CI_BUILD_VERSION: ${{ inputs.version || format('1.5.6-dev.{0}', github.run_number) }}
 
     steps:
       - name: Checkout

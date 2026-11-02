@@ -22,16 +22,23 @@ import com.tang.intellij.lua.Constants
 import com.tang.intellij.lua.comment.psi.LuaDocPrimitiveTableTy
 import com.tang.intellij.lua.search.SearchContext
 
-// All primitive types: boolean, number, function, table, string (as per TyPrimitiveKind)
+// Built-in primitive types (as per TyPrimitiveKind).
 interface ITyPrimitive : ITy {
     val primitiveKind: TyPrimitiveKind
 }
 
-// boolean, number, function, table
+// Primitives without named members.
 class TyPrimitive(override val primitiveKind: TyPrimitiveKind,
                   override val displayName: String) : Ty(TyKind.Primitive), ITyPrimitive {
 
     override val booleanType = if (primitiveKind == TyPrimitiveKind.Boolean) Primitives.BOOLEAN else Primitives.TRUE
+
+    override fun getSuperType(context: SearchContext): ITy? {
+        return when (primitiveKind) {
+            TyPrimitiveKind.Integer, TyPrimitiveKind.Float -> Primitives.NUMBER
+            else -> null
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         return other is ITyPrimitive && other.primitiveKind == primitiveKind
@@ -133,14 +140,8 @@ open class TyPrimitiveClass(override val primitiveKind: TyPrimitiveKind,
 object TyPrimitiveSerializer : TySerializer<ITy>() {
     override fun deserializeTy(flags: Int, stream: StubInputStream): ITy {
         val primitiveKind = stream.readByte()
-        return when (primitiveKind.toInt()) {
-            TyPrimitiveKind.Boolean.ordinal -> Primitives.BOOLEAN
-            TyPrimitiveKind.String.ordinal -> Primitives.STRING
-            TyPrimitiveKind.Number.ordinal -> Primitives.NUMBER
-            TyPrimitiveKind.Table.ordinal -> Primitives.TABLE
-            TyPrimitiveKind.Function.ordinal -> Primitives.FUNCTION
-            else -> Primitives.UNKNOWN
-        }
+        return TyPrimitiveKind.values().getOrNull(primitiveKind.toInt())?.let { Primitives.get(it) }
+            ?: Primitives.UNKNOWN
     }
 
     override fun serializeTy(ty: ITy, stream: StubOutputStream) {

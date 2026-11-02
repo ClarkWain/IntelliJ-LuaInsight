@@ -39,6 +39,11 @@
 --- macro LUA_32BITS in file luaconf.h.)
 ---@class number
 
+--- Integer and floating-point annotation subtypes of number.
+---@class integer : number
+---@alias int integer
+---@class float : number
+
 ---
 --- Lua can call (and manipulate) functions written in Lua and functions
 --- written in C. Both are represented by the type *function*.
@@ -55,6 +60,9 @@
 --- created or modified in Lua, only through the C API. This guarantees the 
 --- integrity of data owned by the host program.
 ---@class userdata
+
+--- A C pointer value, distinct from a full userdata object.
+---@class lightuserdata
 
 ---
 --- The type *thread* represents independent threads of execution and it is 

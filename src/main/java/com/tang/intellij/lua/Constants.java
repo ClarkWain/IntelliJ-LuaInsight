@@ -33,6 +33,10 @@ public class Constants {
     public static final String WORD_TRUE = "true";
     public static final String WORD_FALSE = "false";
     public static final String WORD_NUMBER = "number";
+    public static final String WORD_INT = "int";
+    public static final String WORD_INTEGER = "integer";
+    public static final String WORD_FLOAT = "float";
+    public static final String WORD_LIGHTUSERDATA = "lightuserdata";
     public static final String WORD_TABLE = "table";
     public static final String WORD_FUNCTION = "function";
     public static final String WORD_REQUIRE = "require";

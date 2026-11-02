@@ -22,7 +22,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.tang.intellij.lua.Constants
 import com.tang.intellij.lua.comment.psi.impl.LuaDocTagNotImpl
 import com.tang.intellij.lua.comment.psi.impl.LuaDocTagTypeImpl
-import com.tang.intellij.lua.lang.type.LuaNumber
 import com.tang.intellij.lua.lang.type.LuaString
 import com.tang.intellij.lua.project.LuaSettings
 import com.tang.intellij.lua.psi.*
@@ -127,15 +126,15 @@ private fun LuaUnaryExpr.infer(context: SearchContext): ITy? {
                 when (ty.primitiveKind) {
                     TyPrimitiveKind.Number -> {
                         val value = if (ty.value.startsWith("-")) ty.value.substring(1) else "-${ty.value}"
-                        TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, value)
+                        TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, value, ty.numberKind)
                     }
                     TyPrimitiveKind.String -> { // Unfortunately, Lua has implicit string to number coercion
                         val negative = ty.value.startsWith("-")
-                        val number = LuaNumber.getValue(if (negative) ty.value.substring(1) else ty.value)
+                        val number = TyPrimitiveLiteral.getNumberTy(if (negative) ty.value.substring(1) else ty.value)
 
                         if (number != null) {
-                            val value = if (negative) number.toString() else "-${number}"
-                            TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, value)
+                            val value = if (negative) number.value else "-${number.value}"
+                            TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, value, number.numberKind)
                         } else ty.primitiveType
                     }
                     else -> ty.primitiveType
@@ -234,7 +233,10 @@ private fun guessAndOrType(context: SearchContext, binaryExpr: LuaBinaryExpr, op
 
 private fun guessBinaryOpType(context: SearchContext, binaryExpr: LuaBinaryExpr): ITy? {
     val type = infer(context, binaryExpr.left)
-    return if (type is TyPrimitiveLiteral) type.primitiveType else type
+    // Keep Luanalysis's conservative arithmetic widening. The left operand alone
+    // cannot determine a numeric subtype (e.g. integer / integer produces float).
+    return if (type is TyPrimitiveLiteral) type.primitiveType
+        else if (type == Primitives.INTEGER || type == Primitives.FLOAT) Primitives.NUMBER else type
 }
 
 fun LuaCallExpr.createSubstitutor(sig: IFunSignature): ITySubstitutor {
@@ -455,8 +457,7 @@ fun LuaLiteralExpr.infer(): ITy {
         LuaLiteralKind.Bool -> TyPrimitiveLiteral.getTy(TyPrimitiveKind.Boolean, firstChild.text)
         LuaLiteralKind.Nil -> Primitives.NIL
         LuaLiteralKind.Number -> {
-            val n = LuaNumber.getValue(firstChild.text)
-            if (n != null) TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, n.toString()) else Primitives.UNKNOWN
+            TyPrimitiveLiteral.getNumberTy(firstChild.text) ?: Primitives.UNKNOWN
         }
         LuaLiteralKind.String -> TyPrimitiveLiteral.getTy(TyPrimitiveKind.String, LuaString.getContent(firstChild.text).value)
         LuaLiteralKind.Varargs -> {

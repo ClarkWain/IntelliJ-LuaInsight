@@ -57,7 +57,10 @@ enum class TyPrimitiveKind {
     Number,
     Boolean,
     Table,
-    Function
+    Function,
+    Integer,
+    Float,
+    LightUserdata
 }
 class TyFlags {
     companion object {
@@ -199,7 +202,8 @@ interface ITy : Comparable<ITy> {
         val member = findEffectiveMember(guessContext, name)
 
         if (member == null) {
-            return if (isUnknown && LuaSettings.instance.isUnknownIndexable) {
+            return guessInheritedPrimitiveType(guessContext) { it.guessMemberType(guessContext, name) }
+                ?: if (isUnknown && LuaSettings.instance.isUnknownIndexable) {
                 Primitives.UNKNOWN
             } else {
                 null
@@ -223,6 +227,13 @@ interface ITy : Comparable<ITy> {
             val member = findEffectiveIndexer(guessContext, resolvedIndexTy, exact)
 
             if (member == null) {
+                val inheritedTy = guessInheritedPrimitiveType(guessContext) {
+                    it.guessIndexerType(guessContext, resolvedIndexTy, exact)
+                }
+                if (inheritedTy != null) {
+                    ty = TyUnion.union(guessContext, ty, inheritedTy)
+                    return@eachResolved
+                }
                 if (isUnknown && LuaSettings.instance.isUnknownIndexable) {
                     return Primitives.UNKNOWN
                 } else {
@@ -259,6 +270,20 @@ interface ITy : Comparable<ITy> {
     fun processMembers(context: SearchContext, deep: Boolean = true, process: ProcessTypeMember): Boolean
 
     fun processSignatures(context: SearchContext, processor: Processor<IFunSignature>): Boolean
+}
+
+// Primitive table indexers have no PSI member in the class-member index.
+// Walk the substituted ancestor chain so nominal and generic subclasses can use them.
+private fun ITy.guessInheritedPrimitiveType(context: SearchContext, guess: (ITy) -> ITy?): ITy? {
+    var result: ITy? = null
+    Ty.processSuperClasses(context, this) { ancestor ->
+        val base = if (ancestor is ITyGeneric) Ty.resolve(context, ancestor.base) else ancestor
+        if (base is ITyPrimitive) {
+            result = guess(ancestor)
+        }
+        result == null
+    }
+    return result
 }
 
 fun ITy.hasFlag(flag: Int): Boolean = flags and flag == flag
@@ -713,6 +738,9 @@ abstract class Ty(override val kind: TyKind) : ITy {
                 Constants.WORD_FALSE -> Primitives.FALSE
                 Constants.WORD_STRING -> Primitives.STRING
                 Constants.WORD_NUMBER -> Primitives.NUMBER
+                Constants.WORD_INT, Constants.WORD_INTEGER -> Primitives.INTEGER
+                Constants.WORD_FLOAT -> Primitives.FLOAT
+                Constants.WORD_LIGHTUSERDATA -> Primitives.LIGHTUSERDATA
                 Constants.WORD_TABLE -> Primitives.TABLE
                 Constants.WORD_FUNCTION -> Primitives.FUNCTION
                 else -> null
@@ -1013,7 +1041,21 @@ class Primitives {
         val BOOLEAN = TyPrimitive(TyPrimitiveKind.Boolean, Constants.WORD_BOOLEAN)
         val FUNCTION = TyPrimitive(TyPrimitiveKind.Function, Constants.WORD_FUNCTION)
         val NUMBER = TyPrimitive(TyPrimitiveKind.Number, Constants.WORD_NUMBER)
+        val INTEGER = TyPrimitive(TyPrimitiveKind.Integer, Constants.WORD_INTEGER)
+        val FLOAT = TyPrimitive(TyPrimitiveKind.Float, Constants.WORD_FLOAT)
+        val LIGHTUSERDATA = TyPrimitive(TyPrimitiveKind.LightUserdata, Constants.WORD_LIGHTUSERDATA)
         val STRING = TyPrimitiveClass(TyPrimitiveKind.String, Constants.WORD_STRING)
         val TABLE = TyPrimitive(TyPrimitiveKind.Table, Constants.WORD_TABLE)
+
+        fun get(kind: TyPrimitiveKind): ITy = when (kind) {
+            TyPrimitiveKind.Boolean -> BOOLEAN
+            TyPrimitiveKind.Function -> FUNCTION
+            TyPrimitiveKind.Number -> NUMBER
+            TyPrimitiveKind.Integer -> INTEGER
+            TyPrimitiveKind.Float -> FLOAT
+            TyPrimitiveKind.LightUserdata -> LIGHTUSERDATA
+            TyPrimitiveKind.String -> STRING
+            TyPrimitiveKind.Table -> TABLE
+        }
     }
 }

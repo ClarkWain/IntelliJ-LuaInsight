@@ -16,8 +16,8 @@ Lua Insight 是面向 IntelliJ IDEA 和 Android Studio 的 Lua 插件，将
 
 | 发布包 | 支持的 IntelliJ 平台范围 |
 | --- | --- |
-| `IntelliJ-LuaInsight-1.5.5-IDEA2025.zip` | IDEA 2025.1–2025.3（251–253） |
-| `IntelliJ-LuaInsight-1.5.5-IDEA2026.zip` | IDEA 2026.1–2026.2（261–262） |
+| `IntelliJ-LuaInsight-1.5.6-IDEA2025.zip` | IDEA 2025.1–2025.3（251–253） |
+| `IntelliJ-LuaInsight-1.5.6-IDEA2026.zip` | IDEA 2026.1–2026.2（261–262） |
 
 Android Studio 按 **Help → About** 中的 IntelliJ 平台 Build 选择安装包：
 **251–253** 对应 **2025 包**，**261–262** 对应 **2026 包**。
@@ -32,6 +32,8 @@ Android Studio 按 **Help → About** 中的 IntelliJ 平台 Build 选择安装�
   [类型收窄说明](docs/flow-types.zh-CN.md)。
 - 可调用类、重载、可选参数和可变返回值。
 - 赋值、参数、返回值、继承和未声明成员的类型检查。
+- 兼容 EmmyLua 的 `int`/`integer`、`float`、`lightuserdata` 和基础类型／表类型继承，
+  支持从泛型字典父类推断字段和索引类型。
 - Lua 5.1–5.4 标准库定义，以及补全、导航、重命名、格式化、文档和原有调试器集成。
 
 类型安全检查默认启用，类型不匹配默认显示为错误。可在 IDE 的 Inspections 和 Lua

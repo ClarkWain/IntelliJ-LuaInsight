@@ -61,7 +61,20 @@ class AssignTypeInspection : StrictInspection() {
 
                             if (assigneeMemberType != null) {
                                 // table<K, V> will always accept nil value assignment i.e. entry removal
-                                val targetTy = if (assigneeCandidateOwnerTy is ITyGeneric && assigneeCandidateOwnerTy.base == Primitives.TABLE) {
+                                val indexTy = if (memberName != null) {
+                                    TyPrimitiveLiteral.getTy(TyPrimitiveKind.String, memberName)
+                                } else idExpr?.guessType(context)
+                                var inheritedTableEntry = false
+                                if (indexTy != null && assigneeCandidateOwnerTy.findEffectiveIndexer(context, indexTy) == null) {
+                                    Ty.processSuperClasses(context, assigneeCandidateOwnerTy) { ancestor ->
+                                        if (ancestor is ITyGeneric && ancestor.base == Primitives.TABLE && ancestor.args.size == 2
+                                            && ancestor.args[0].contravariantOf(context, indexTy, 0)) {
+                                            inheritedTableEntry = true
+                                        }
+                                        !inheritedTableEntry
+                                    }
+                                }
+                                val targetTy = if (inheritedTableEntry || (assigneeCandidateOwnerTy is ITyGeneric && assigneeCandidateOwnerTy.base == Primitives.TABLE)) {
                                     assigneeMemberType.union(context, Primitives.NIL)
                                 } else assigneeMemberType
 

@@ -18,11 +18,13 @@ package com.tang.intellij.lua.ty
 
 import com.intellij.psi.stubs.StubInputStream
 import com.intellij.psi.stubs.StubOutputStream
+import com.tang.intellij.lua.lang.type.LuaNumber
 import com.tang.intellij.lua.search.SearchContext
 import java.util.concurrent.ConcurrentHashMap
 
 
-class TyPrimitiveLiteral private constructor(val primitiveKind: TyPrimitiveKind, val value: String) : Ty(TyKind.PrimitiveLiteral) {
+class TyPrimitiveLiteral private constructor(val primitiveKind: TyPrimitiveKind, val value: String,
+                                             val numberKind: TyPrimitiveKind) : Ty(TyKind.PrimitiveLiteral) {
     override val displayName: String by lazy { if (primitiveKind == TyPrimitiveKind.String) "\"${value.replace("\"", "\\\"")}\"" else value }
 
     // Primitives.TRUE/Primitives.FALSE are TyPrimitiveLiteral, to avoid circular references (a null booleanType) we make this lazy.
@@ -31,17 +33,11 @@ class TyPrimitiveLiteral private constructor(val primitiveKind: TyPrimitiveKind,
     }
 
     val primitiveType by lazy {
-        when (primitiveKind) {
-            TyPrimitiveKind.Boolean -> Primitives.BOOLEAN
-            TyPrimitiveKind.Function -> Primitives.FUNCTION
-            TyPrimitiveKind.Number -> Primitives.NUMBER
-            TyPrimitiveKind.String -> Primitives.STRING
-            TyPrimitiveKind.Table -> Primitives.TABLE
-        }
+        Primitives.get(primitiveKind)
     }
 
     override fun getSuperType(context: SearchContext): ITy {
-        return primitiveType
+        return if (primitiveKind == TyPrimitiveKind.Number) Primitives.get(numberKind) else primitiveType
     }
 
     override fun contravariantOf(context: SearchContext, other: ITy, varianceFlags: Int): Boolean {
@@ -77,21 +73,39 @@ class TyPrimitiveLiteral private constructor(val primitiveKind: TyPrimitiveKind,
     companion object {
         private val primitiveLiterals = ConcurrentHashMap<String, TyPrimitiveLiteral>()
 
-        fun getTy(primitiveKind: TyPrimitiveKind, value: String): TyPrimitiveLiteral {
-            val id = "$primitiveKind:$value"
-            return primitiveLiterals.getOrPut(id, { TyPrimitiveLiteral(primitiveKind, value) })
+        fun getTy(primitiveKind: TyPrimitiveKind, value: String,
+                  numberKind: TyPrimitiveKind = TyPrimitiveKind.Number): TyPrimitiveLiteral {
+            val id = "$primitiveKind:$value:$numberKind"
+            return primitiveLiterals.getOrPut(id, { TyPrimitiveLiteral(primitiveKind, value, numberKind) })
         }
+
+        fun getNumberTy(text: String): TyPrimitiveLiteral? {
+            val number = LuaNumber.getValue(text) ?: return null
+            val isInteger = integerLiteral.matches(text)
+                && (text.startsWith("0x", true) || text.toLongOrNull() != null)
+            val kind = if (isInteger) TyPrimitiveKind.Integer else TyPrimitiveKind.Float
+            return getTy(TyPrimitiveKind.Number, number.toString(), kind)
+        }
+
+        private val integerLiteral = Regex("(?:[0-9]+|0[xX][0-9a-fA-F]+)")
     }
 }
 
 object TyPrimitiveLiteralSerializer : TySerializer<TyPrimitiveLiteral>() {
     override fun deserializeTy(flags: Int, stream: StubInputStream): TyPrimitiveLiteral {
         val primitiveKind = stream.readByte().toInt()
-        return TyPrimitiveLiteral.getTy(TyPrimitiveKind.values()[primitiveKind], stream.readUTF())
+        val kind = TyPrimitiveKind.values()[primitiveKind]
+        val value = stream.readUTF()
+        val numberKind = if (kind == TyPrimitiveKind.Number) TyPrimitiveKind.values()[stream.readByte().toInt()]
+            else TyPrimitiveKind.Number
+        return TyPrimitiveLiteral.getTy(kind, value, numberKind)
     }
 
     override fun serializeTy(ty: TyPrimitiveLiteral, stream: StubOutputStream) {
         stream.writeByte(ty.primitiveKind.ordinal)
         stream.writeUTF(ty.value)
+        if (ty.primitiveKind == TyPrimitiveKind.Number) {
+            stream.writeByte(ty.numberKind.ordinal)
+        }
     }
 }

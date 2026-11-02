@@ -282,10 +282,18 @@ class TyUnion : Ty {
         }
 
         fun union(context: SearchContext, t1: ITy, t2: ITy): ITy {
+            if (t1 is TyPrimitiveLiteral && t2 is TyPrimitiveLiteral
+                && t1.primitiveKind == TyPrimitiveKind.Number && t2.primitiveKind == TyPrimitiveKind.Number
+                && t1.value == t2.value && t1.numberKind != t2.numberKind) {
+                return TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, t1.value)
+            }
             return when {
-                t1 === t2 || t1.equals(context, t2, 0) -> t1
+                t1 === t2 -> t1
+                // Value equality ignores numeric representation, including inside
+                // unions. Normalize their children before using that shortcut.
                 t1 is TyUnion -> t1.union(context, t2)
                 t2 is TyUnion -> t2.union(context, t1)
+                t1.equals(context, t2, 0) -> t1
                 t1 is TyMultipleResults || t2 is TyMultipleResults -> union(context, listOf(t1, t2))
                 t1 is TyVoid -> t2
                 t2 is TyVoid -> t1
@@ -306,6 +314,22 @@ class TyUnion : Ty {
 
             if (expandedTys.size == 0) {
                 return Primitives.VOID
+            }
+
+            // Equal numeric values can have different runtime representations.
+            // Do not retain one branch's representation when collapsing a union.
+            val numberKinds = mutableMapOf<String, TyPrimitiveKind>()
+            expandedTys.filterIsInstance<TyPrimitiveLiteral>().forEach {
+                if (it.primitiveKind == TyPrimitiveKind.Number) {
+                    val previous = numberKinds[it.value]
+                    numberKinds[it.value] = if (previous == null || previous == it.numberKind) it.numberKind
+                        else TyPrimitiveKind.Number
+                }
+            }
+            expandedTys.replaceAll {
+                if (it is TyPrimitiveLiteral && it.primitiveKind == TyPrimitiveKind.Number
+                    && numberKinds[it.value] != it.numberKind) TyPrimitiveLiteral.getTy(TyPrimitiveKind.Number, it.value)
+                else it
             }
 
             val childSet = sortedSetOf(displayNameComparator)

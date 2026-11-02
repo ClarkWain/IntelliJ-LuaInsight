@@ -94,8 +94,8 @@ class LuaFileElementType : IStubFileElementType<LuaFileStub>(LuaLanguage.INSTANC
 
     override fun getExternalId() = "lua.file"
 
-    // The migrated type system changes stub serialization. Rebuild existing EmmyLua indexes.
-    override fun getStubVersion(): Int = 2
+    // Numeric literals now retain their representation; rebuild pre-compatibility indexes.
+    override fun getStubVersion(): Int = 3
 }
 
 class LuaFileStub : PsiFileStubImpl<LuaPsiFile> {

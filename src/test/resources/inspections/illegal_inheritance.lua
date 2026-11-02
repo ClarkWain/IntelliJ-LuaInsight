@@ -6,11 +6,19 @@
 
 ---@<error descr="Illegal cyclical inheritance from CyclicInheritance1">class CyclicInheritance3 : CyclicInheritance2</error>
 
----@<error descr="Illegal inheritance from primitive type">class PrimitiveInheritance : string</error>
+---@class PrimitiveInheritance : string
 
----@<error descr="Illegal inheritance from primitive type">class TableInheritance : table</error>
+---@class TableInheritance : table
 
----@<error descr="Illegal inheritance from primitive type">class GenericTableInheritance : table<string, string></error>
+---@class GenericTableInheritance : table<string, string>
+
+---@class IntegerInheritance : integer
+
+---@class FloatInheritance : float
+
+---@class LightUserdataInheritance : lightuserdata
+
+---@<error descr="Illegal inheritance from array">class ArrayInheritance : string[]</error>
 
 ---@<error descr="Illegal inheritance from primitive type">class NumberInheritance : 1</error>
 
