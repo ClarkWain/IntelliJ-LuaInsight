@@ -1,0 +1,570 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "d005bc60d6855812f2b08b5e54363dd59ce006f4",
+  "ci_run": "https://github.com/ClarkWain/IntelliJ-LuaInsight/actions/runs/41407135034",
+  "android_studio_252": {
+    "original_patch_full_suite": {
+      "tests": 134,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "name": "CodeStyleTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.ParsingTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestAlias",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestArgHistory",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestCompletion",
+          "tests": 13
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestModule",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestMultipleResults",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestPrimitiveLiteral",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSelf",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestShouldBe",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSnippet",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.editor.IssueTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.generic.GenericTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ConcurrentResolutionTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.DuplicateTypeTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalAliasTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalInheritanceTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LanguageLevelTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LocalNameShadowedTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.NilFlowTest",
+          "tests": 14
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.PrimitiveTypesTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ReturnTypeTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.StandardLibraryTypesTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.TypeSafetyTest",
+          "tests": 50
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.MoveFileTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.RenameTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.structure.StructureViewTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.vararg.VarargTest",
+          "tests": 2
+        },
+        {
+          "name": "Issues",
+          "tests": 7
+        }
+      ]
+    },
+    "refined_type_tests": {
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "name": "com.tang.intellij.test.inspections.PrimitiveTypesTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.TypeSafetyTest",
+          "tests": 50
+        }
+      ]
+    }
+  },
+  "idea_262_local_full_suite": {
+    "tests": 135,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "CodeStyleTest",
+        "tests": 3
+      },
+      {
+        "name": "com.tang.intellij.test.completion.ParsingTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestAlias",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestArgHistory",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestCompletion",
+        "tests": 13
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestModule",
+        "tests": 3
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestMultipleResults",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestPrimitiveLiteral",
+        "tests": 3
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestSelf",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestShouldBe",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.completion.TestSnippet",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.editor.IssueTest",
+        "tests": 3
+      },
+      {
+        "name": "com.tang.intellij.test.generic.GenericTest",
+        "tests": 4
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.ConcurrentResolutionTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.DuplicateTypeTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.IllegalAliasTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.IllegalInheritanceTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.LanguageLevelTest",
+        "tests": 4
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.LocalNameShadowedTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.NilFlowTest",
+        "tests": 14
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.PrimitiveTypesTest",
+        "tests": 5
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.ReturnTypeTest",
+        "tests": 5
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.StandardLibraryTypesTest",
+        "tests": 4
+      },
+      {
+        "name": "com.tang.intellij.test.inspections.TypeSafetyTest",
+        "tests": 50
+      },
+      {
+        "name": "com.tang.intellij.test.refactoring.MoveFileTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.refactoring.RenameTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.structure.StructureViewTest",
+        "tests": 1
+      },
+      {
+        "name": "com.tang.intellij.test.vararg.VarargTest",
+        "tests": 2
+      },
+      {
+        "name": "Issues",
+        "tests": 7
+      }
+    ]
+  },
+  "ci": {
+    "2025": {
+      "tests": 135,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "name": "CodeStyleTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.ParsingTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestAlias",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestArgHistory",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestCompletion",
+          "tests": 13
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestModule",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestMultipleResults",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestPrimitiveLiteral",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSelf",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestShouldBe",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSnippet",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.editor.IssueTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.generic.GenericTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ConcurrentResolutionTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.DuplicateTypeTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalAliasTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalInheritanceTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LanguageLevelTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LocalNameShadowedTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.NilFlowTest",
+          "tests": 14
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.PrimitiveTypesTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ReturnTypeTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.StandardLibraryTypesTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.TypeSafetyTest",
+          "tests": 50
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.MoveFileTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.RenameTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.structure.StructureViewTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.vararg.VarargTest",
+          "tests": 2
+        },
+        {
+          "name": "Issues",
+          "tests": 7
+        }
+      ]
+    },
+    "2026": {
+      "tests": 135,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suites": [
+        {
+          "name": "CodeStyleTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.ParsingTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestAlias",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestArgHistory",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestCompletion",
+          "tests": 13
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestModule",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestMultipleResults",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestPrimitiveLiteral",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSelf",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestShouldBe",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.completion.TestSnippet",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.editor.IssueTest",
+          "tests": 3
+        },
+        {
+          "name": "com.tang.intellij.test.generic.GenericTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ConcurrentResolutionTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.DuplicateTypeTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalAliasTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.IllegalInheritanceTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LanguageLevelTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.LocalNameShadowedTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.NilFlowTest",
+          "tests": 14
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.PrimitiveTypesTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.ReturnTypeTest",
+          "tests": 5
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.StandardLibraryTypesTest",
+          "tests": 4
+        },
+        {
+          "name": "com.tang.intellij.test.inspections.TypeSafetyTest",
+          "tests": 50
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.MoveFileTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.refactoring.RenameTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.structure.StructureViewTest",
+          "tests": 1
+        },
+        {
+          "name": "com.tang.intellij.test.vararg.VarargTest",
+          "tests": 2
+        },
+        {
+          "name": "Issues",
+          "tests": 7
+        }
+      ]
+    }
+  },
+  "verifier": [
+    {
+      "sdk": "2025.1.7.2",
+      "build": "IU-251.29188.72",
+      "api_compatibility_errors": 0,
+      "verdict": "1 compatibility warning. 24 usages of deprecated API. 21 usages of experimental API"
+    },
+    {
+      "sdk": "2025.2.6.3",
+      "build": "IU-252.28539.97",
+      "api_compatibility_errors": 0,
+      "verdict": "1 compatibility warning. 24 usages of deprecated API. 21 usages of experimental API"
+    },
+    {
+      "sdk": "2025.3.6.1",
+      "build": "IU-253.33813.55",
+      "api_compatibility_errors": 0,
+      "verdict": "1 compatibility warning. 26 usages of deprecated API. 21 usages of experimental API"
+    },
+    {
+      "sdk": "2026.1.5",
+      "build": "IU-261.27258.48",
+      "api_compatibility_errors": 0,
+      "verdict": "1 compatibility warning. 32 usages of deprecated API. 21 usages of experimental API"
+    },
+    {
+      "sdk": "2026.2.3",
+      "build": "IU-262.10968.63",
+      "api_compatibility_errors": 0,
+      "verdict": "1 compatibility warning. 33 usages of deprecated API. 21 usages of experimental API"
+    }
+  ],
+  "native_editors": [
+    {
+      "ide": "Android Studio 2025.2.3",
+      "build": "AI-252.28238.7.2523.14688667",
+      "expected_errors": 4,
+      "observed_errors": 4,
+      "screenshot": "issue1-as-editor.png"
+    },
+    {
+      "ide": "IntelliJ IDEA 2026.2.3",
+      "build": "IU-262.10968.63",
+      "expected_errors": 4,
+      "observed_errors": 4,
+      "screenshot": "issue1-idea262-editor.png"
+    }
+  ],
+  "additional_regression": "testNumericUnionComposition reproduced a failure before normalization of composed unions."
+}

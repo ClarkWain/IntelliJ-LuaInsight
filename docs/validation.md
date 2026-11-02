@@ -1,77 +1,105 @@
-# IntelliJ-LuaInsight 1.5.5 verification
+# IntelliJ-LuaInsight 1.5.6 verification
 
-Date: **2026-10-14**. IDE display name: **Lua Insight**. Publisher: **ClarkWain**.
-Source commit: `866df1e7bd1b040984a1fe97ec15251010fdfdc4`.
+Date: **2026-11-02**. IDE display name: **Lua Insight**. Publisher: **ClarkWain**.
+Source commit: `d005bc60d6855812f2b08b5e54363dd59ce006f4`.
 
-This release declares standard-library package fields as `string`, fixing false
-empty-string literal errors when assigning paths such as:
+This release fixes [issue #1](https://github.com/ClarkWain/IntelliJ-LuaInsight/issues/1):
+numeric annotation subtypes, distinct `lightuserdata`, and primitive/generic-table
+inheritance with inherited member/indexer inference. Review also found and fixed
+an additional numeric-union composition case. Eight tests were added in total.
 
-```lua
-package.path = directory .. "?.lua"
-```
+## Automated checks
 
-The resource-only fix adds 11 type annotations: `package.path` and
-`package.cpath` in Lua 5.1–5.4, plus `package.config` in Lua 5.2–5.4.
-Type inference and inspection code are unchanged.
+The [CI run](https://github.com/ClarkWain/IntelliJ-LuaInsight/actions/runs/41407135034)
+ran `test buildPlugin verifyPlugin` for both targets, with normal settings
+search-index generation enabled.
 
-## Targeted editor checks
+| Platform | Scope | Result |
+| --- | --- | --- |
+| IDEA 2025.1.7.2 | Full suite, CI | 135/135 passed |
+| IDEA 2026.1.5 | Full suite, CI | 135/135 passed |
+| IDEA 2026.2.3 | Full suite, Windows editor fixtures | 135/135 passed |
+| Android Studio 2025.2.3 | Original patch full suite | 134/134 passed |
+| Android Studio 2025.2.3 | Refined primitive and type-safety tests | 55/55 passed |
 
-The four `StandardLibraryTypesTest` cases passed on Android Studio 2025.2.3,
-build `AI-252.28238.7.2523.14688667`, using IntelliJ Platform editor fixtures.
-Each case loads the actual bundled standard library for one Lua language level
-and verifies:
+The extra `testNumericUnionComposition` case failed before the refinement and
+passed afterward. It checks that merging equal-valued unions does not retain
+only one branch's integer/float representation. Existing literal-value equality
+(`1` accepts `1.0`) is retained. Other coverage includes built-in registration,
+serialization, generic dictionary ancestors, explicit-field precedence, nil
+entry deletion, illegal overrides and the retained inheritance restrictions.
+Results are recorded in [issue1-results.json](validation/issue1-results.json).
 
-- Assigning a concatenated string to the package fields produces no error.
-- Assigning a number still produces a type error.
-- Inference returns `string` for each field, rather than an empty-string literal.
+## Plugin Verifier
 
-Results are recorded in [stdlib-string-tests.json](validation/stdlib-string-tests.json).
+| IDEA SDK | Platform build | API compatibility errors |
+| --- | --- | --- |
+| 2025.1.7.2 | IU-251.29188.72 | 0 |
+| 2025.2.6.3 | IU-252.28539.97 | 0 |
+| 2025.3.6.1 | IU-253.33813.55 | 0 |
+| 2026.1.5 | IU-261.27258.48 | 0 |
+| 2026.2.3 | IU-262.10968.63 | 0 |
+
+Each SDK reports one existing packaging warning: the plugin bundles the IDE
+package `org.intellij.markdown`. Deprecated API usages (24–33, depending on SDK)
+and 21 experimental API usages remain. Raw reports are attached to the CI run.
+
+## Native editor checks
+
+Source-built sandbox IDEs opened the [editor sample](../examples/issue1-validation/main.lua).
+Android Studio 2025.2.3 (`AI-252.28238.7.2523.14688667`, JBR 21) and IDEA
+2026.2.3 (`IU-262.10968.63`, JDK 25) each displayed exactly four expected errors:
+an inappropriate float argument, an inappropriate integer argument, full
+userdata assigned to lightuserdata, and a string assigned to an integer dictionary.
+Valid calls, inherited integer fields, nil entry removal and a string-parent
+method call had no corresponding type errors. Six ordinary unused-code warnings
+are also visible in the sample.
+
+![Android Studio editor check](validation/issue1-as-editor.png)
+
+![IDEA 2026.2 editor check](validation/issue1-idea262-editor.png)
+
+Separate SDK diagnostics were present: Windows COM/ADB and an application-disposal
+error during Android Studio shutdown, and OS Integration/WSL startup errors in the
+extracted IDEA 262 SDK. These editor checks establish the observed type behavior,
+not an entirely clean IDE log. Debugger sessions and C API runtime behavior were
+not exercised.
 
 ## Release packages
 
-Both targets compiled and packaged in the
-[build run](https://github.com/ClarkWain/IntelliJ-LuaInsight/actions/runs/38540393810).
-
-| Package | Compilation SDK | Supported platform range | Bytes |
-| --- | --- | --- | --- |
-| `IntelliJ-LuaInsight-1.5.5-IDEA2025.zip` | IDEA 2025.1.7.2 | 251–253 | 8,900,563 |
-| `IntelliJ-LuaInsight-1.5.5-IDEA2026.zip` | IDEA 2026.1.5 | 261–262 | 8,901,281 |
+| Package | Supported platform range | Bytes |
+| --- | --- | --- |
+| `IntelliJ-LuaInsight-1.5.6-IDEA2025.zip` | 251–253 | 8,906,604 |
+| `IntelliJ-LuaInsight-1.5.6-IDEA2026.zip` | 261–262 | 8,907,389 |
 
 SHA-256:
 
 ```text
-6897950b306c0ebdade96ef719e33d07ac2903e9b5ae9f52f1c22c36fd0fc586  IntelliJ-LuaInsight-1.5.5-IDEA2025.zip
-82900b9b5877278c6b8dbf96de16cd8d8981613a4b4e23ac832cbf1dc75782e9  IntelliJ-LuaInsight-1.5.5-IDEA2026.zip
+cb515ec195bc6774eacb586cecc8778efbdab53ed2646cd22dac464b1b89f921  IntelliJ-LuaInsight-1.5.6-IDEA2025.zip
+a3c1505ecce97696d63f3fcd0a680516be66b456fd2575ab0dc8b14d83a0093e  IntelliJ-LuaInsight-1.5.6-IDEA2026.zip
 ```
 
-Archive inspection verifies the name, publisher, version, compatibility bounds,
-standard libraries and debugger resources. All 11 corrected declarations match
-the source in both the ZIP resource directory and the plugin JAR used by the
-standard-library provider. Artifact details are in
-[release-summary.json](validation/release-summary.json).
+Archive checks confirm the expected descriptor, publisher, compatibility bounds,
+new primitive declarations in Lua 5.0–5.4, previous package-string fixes, debugger
+resources and settings search-index archive. Disassembly confirms stub version
+**3**, which forces older indexes to rebuild for the updated literal serialization.
+Details are in [release-summary.json](validation/release-summary.json).
 
-## Verification scope
+## Remaining limits and reproduction
 
-Verification for 1.5.5 consists of four targeted editor tests, compilation of
-both release targets, packaging and archive inspection. The full regression
-suite, Plugin Verifier matrix and native UI checks were not repeated.
+Arithmetic and unannotated inference retain conservative `number` widening.
+Extreme numeric values, hexadecimal floats and all custom numeric alias
+combinations were not exhaustively tested. The annotation subtypes do not change
+Lua runtime semantics on older language levels.
 
-The [1.5.4 verification record](https://github.com/ClarkWain/IntelliJ-LuaInsight/blob/2949f7b7/docs/validation.md)
-documents the preceding flow-type tests on platforms 252 and 262 and links the
-earlier compatibility checks. Those results remain baseline evidence.
-Native debugger sessions were not exercised.
-
-## Reproduce
-
-Run Gradle with JDK 21. The 2026 target also needs a JDK 25 toolchain.
+Run Gradle with JDK 21; the 2026 target also needs a JDK 25 toolchain:
 
 ```sh
-./gradlew test --tests '*StandardLibraryTypesTest' -DIDEA_VER=2025 --no-configuration-cache
-./gradlew buildPlugin -DIDEA_VER=2025 --no-configuration-cache
-./gradlew buildPlugin -DIDEA_VER=2026 --no-configuration-cache
+./gradlew test buildPlugin verifyPlugin -DIDEA_VER=2025 --no-configuration-cache
+./gradlew test buildPlugin verifyPlugin -DIDEA_VER=2026 --no-configuration-cache
 ```
 
-To reproduce the editor checks on an installed IDE, add
-`-PlocalIdePath=/path/to/ide`. Manual builds in the
-[workflow](../.github/workflows/build.yml) compile and package by default;
-the optional `validate` input enables the full regression and compatibility checks.
+For installed IDEs, add `-PlocalIdePath=/path/to/ide`. Manual
+[workflow](../.github/workflows/build.yml) runs with `validate=true` execute the
+full test and verifier matrix. The [1.5.5 record](https://github.com/ClarkWain/IntelliJ-LuaInsight/blob/11a6d6f3/docs/validation.md)
+documents the preceding standard-library declaration fix.

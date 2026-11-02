@@ -1,32 +1,36 @@
 {
-  "date": "2026-10-14",
-  "source_commit": "866df1e7bd1b040984a1fe97ec15251010fdfdc4",
-  "ci_run": "https://github.com/ClarkWain/IntelliJ-LuaInsight/actions/runs/38540393810",
+  "date": "2026-11-02",
+  "source_commit": "d005bc60d6855812f2b08b5e54363dd59ce006f4",
+  "ci_run": "https://github.com/ClarkWain/IntelliJ-LuaInsight/actions/runs/41407135034",
   "targets": {
     "2025": {
-      "file": "IntelliJ-LuaInsight-1.5.5-IDEA2025.zip",
-      "sha256": "6897950b306c0ebdade96ef719e33d07ac2903e9b5ae9f52f1c22c36fd0fc586",
-      "bytes": 8900563,
+      "file": "IntelliJ-LuaInsight-1.5.6-IDEA2025.zip",
+      "sha256": "cb515ec195bc6774eacb586cecc8778efbdab53ed2646cd22dac464b1b89f921",
+      "bytes": 8906604,
       "since_build": "251",
       "until_build": "253.*",
+      "stub_version": 3,
       "checks": [
         "compiled",
         "packaged",
         "descriptor and resources inspected",
-        "11 package string declarations inspected in ZIP and plugin JAR"
+        "primitive declarations and previous package string fixes inspected in ZIP and plugin JAR",
+        "settings search-index archive present"
       ]
     },
     "2026": {
-      "file": "IntelliJ-LuaInsight-1.5.5-IDEA2026.zip",
-      "sha256": "82900b9b5877278c6b8dbf96de16cd8d8981613a4b4e23ac832cbf1dc75782e9",
-      "bytes": 8901281,
+      "file": "IntelliJ-LuaInsight-1.5.6-IDEA2026.zip",
+      "sha256": "a3c1505ecce97696d63f3fcd0a680516be66b456fd2575ab0dc8b14d83a0093e",
+      "bytes": 8907389,
       "since_build": "261",
       "until_build": "262.*",
+      "stub_version": 3,
       "checks": [
         "compiled",
         "packaged",
         "descriptor and resources inspected",
-        "11 package string declarations inspected in ZIP and plugin JAR"
+        "primitive declarations and previous package string fixes inspected in ZIP and plugin JAR",
+        "settings search-index archive present"
       ]
     }
   }
